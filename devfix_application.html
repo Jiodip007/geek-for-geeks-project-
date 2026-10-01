@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DEVFIX - Turn Coding Errors into Understandable Solutions</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gfg: {
+              DEFAULT: '#00d26a',
+              hover: '#00b359',
+              dark: '#0f172a',
+              card: '#1e293b',
+              border: '#334155',
+              code: '#090d16'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'JetBrains Mono', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Custom scrollbar for terminal/code look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00d26a;
+    }
+  </style>
+</head>
+
+<body class="bg-gfg-dark text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-gfg selection:text-black">
+
+  <!-- Header Banner -->
+  <header class="border-b border-gfg-border bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-gfg text-black p-2 rounded-lg font-mono font-bold text-xl flex items-center justify-center shadow-lg shadow-gfg/20">
+          &lt;/&gt;
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-extrabold tracking-tight text-white">DEV<span class="text-gfg">FIX</span></h1>
+            <span class="bg-gfg/10 text-gfg border border-gfg/30 text-xs px-2 py-0.5 rounded-full font-mono font-semibold">GFG / TIU Edition</span>
+          </div>
+          <p class="text-xs text-slate-400">Turn coding errors into understandable solutions</p>
+        </div>
+      </div>
+
+      <!-- Mode Selector Badge -->
+      <div class="flex items-center gap-3 bg-gfg-card border border-gfg-border px-3 py-1.5 rounded-xl text-xs">
+        <span class="text-slate-400 font-medium">Engine Mode:</span>
+        <button id="modeToggleBtn" class="bg-gfg/20 text-gfg border border-gfg/40 px-2.5 py-1 rounded-md font-mono text-xs flex items-center gap-1.5 hover:bg-gfg/30 transition">
+          <span class="w-2 h-2 rounded-full bg-gfg animate-pulse"></span>
+          <span id="engineModeText">Offline Preset Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Left Column: Step 1 & Step 2 Input Form -->
+    <section class="lg:col-span-5 flex flex-col gap-6">
+      
+      <!-- Challenge Overview Card -->
+      <div class="bg-gradient-to-br from-gfg-card to-slate-900 border border-gfg-border rounded-2xl p-5 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-gfg/10 rounded-full blur-2xl pointer-events-none"></div>
+        <h2 class="text-sm font-semibold text-gfg uppercase tracking-wider mb-1">The Challenge Goal</h2>
+        <p class="text-sm text-slate-300">
+          Developers frequently encounter stack traces they don't immediately understand. DEVFIX breaks them down instantly into plain-English root causes and fixes.
+        </p>
+      </div>
+
+      <!-- Main Input Controls -->
+      <div class="bg-gfg-card border border-gfg-border rounded-2xl p-6 shadow-xl flex flex-col gap-5">
+        
+        <!-- Step 1 Header -->
+        <div class="flex items-center justify-between border-b border-gfg-border/60 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gfg text-black font-bold text-xs flex items-center justify-center">1</span>
+            <h3 class="font-bold text-white text-base">Select Language &amp; Preset</h3>
+          </div>
+        </div>
+
+        <!-- Language Dropdown -->
+        <div>
+          <label for="languageSelect" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            2. Programming Language
+          </label>
+          <select id="languageSelect" class="w-full bg-gfg-dark border border-gfg-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gfg font-mono transition">
+            <option value="Python">Python</option>
+            <option value="JavaScript" selected>JavaScript</option>
+            <option value="Java">Java</option>
+            <option value="C++">C++</option>
+            <option value="TypeScript">TypeScript</option>
+            <option value="C#">C#</option>
+            <option value="Go">Go</option>
+            <option value="Other">Other / General</option>
+          </select>
+        </div>
+
+        <!-- Preset Fast Pick Buttons -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Quick Test Presets
+            </label>
+            <span class="text-[10px] text-slate-500">1-click sample loading</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2" id="presetButtonsContainer">
+            <!-- Dynamically populated preset buttons -->
+          </div>
+        </div>
+
+        <!-- Step 2: Error Input Area -->
+        <div class="flex items-center justify-between border-b border-gfg-border/60 pb-2 pt-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gfg text-black font-bold text-xs flex items-center justify-center">2</span>
+            <h3 class="font-bold text-white text-base">Enter Error / Stack Trace</h3>
+          </div>
+          <button id="clearBtn" class="text-xs text-slate-400 hover:text-white transition">Clear</button>
+        </div>
+
+        <div>
+          <textarea id="errorMessageInput" rows="6" 
+            class="w-full bg-gfg-dark border border-gfg-border rounded-xl p-4 text-xs font-mono text-emerald-400 focus:outline-none focus:border-gfg transition placeholder-slate-600 resize-none leading-relaxed"
+            placeholder="Paste raw error log here... e.g. TypeError: Cannot read properties of undefined"></textarea>
+        </div>
+
+        <!-- API Key Expansion Toggle (Optional Gemini Live AI) -->
+        <div class="border-t border-gfg-border/60 pt-4">
+          <button id="toggleApiKeyBtn" type="button" class="text-xs text-gfg hover:underline flex items-center gap-1 font-medium">
+            <span>⚙️️ Enable Live Gemini AI Model (Optional)</span>
+          </button>
+          <div id="apiKeySection" class="hidden mt-3 space-y-2">
+            <label for="apiKeyInput" class="block text-xs text-slate-400">Gemini API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="AI Studio Key (Optional - standard presets work fine)"
+              class="w-full bg-gfg-dark border border-gfg-border rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-gfg" />
+            <p class="text-[10px] text-slate-500">Leave blank to use smart built-in heuristic pattern matcher!</p>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button id="analyzeBtn" class="w-full bg-gfg hover:bg-gfg-hover text-slate-950 font-bold py-3.5 px-4 rounded-xl transition shadow-lg shadow-gfg/20 flex items-center justify-center gap-2 group text-sm">
+          <svg class="w-5 h-5 transition transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span id="analyzeBtnText">Analyze &amp; Generate Fix</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Right Column: Step 3 & Step 4 Output Display -->
+    <section class="lg:col-span-7 flex flex-col gap-6">
+      
+      <!-- Output Header / Status -->
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>Diagnostic Dashboard</span>
+          <span id="statusBadge" class="bg-slate-800 text-slate-400 text-xs px-2.5 py-0.5 rounded-full font-mono border border-gfg-border">Awaiting Input</span>
+        </h2>
+        <button id="copyAllFixBtn" class="hidden text-xs text-gfg bg-gfg/10 hover:bg-gfg/20 border border-gfg/30 px-3 py-1.5 rounded-lg font-mono transition items-center gap-1.5">
+          <span>📋 Copy Complete Solution</span>
+        </button>
+      </div>
+
+      <!-- Placeholder / Empty State -->
+      <div id="emptyState" class="bg-gfg-card border border-gfg-border/80 rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[420px]">
+        <div class="w-16 h-16 rounded-2xl bg-gfg-dark border border-gfg-border flex items-center justify-center text-gfg mb-4 text-2xl shadow-inner">
+          🔍
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">No Error Analyzed Yet</h3>
+        <p class="text-sm text-slate-400 max-w-sm mb-6">
+          Paste your stack trace on the left or select a sample preset to generate instant insights, root cause analysis, and fixes.
+        </p>
+        <button id="loadQuickSampleBtn" class="text-xs bg-gfg/20 hover:bg-gfg/30 text-gfg border border-gfg/40 px-4 py-2 rounded-xl font-medium transition">
+          Load Sample JavaScript Error
+        </button>
+      </div>
+
+      <!-- Solution Content (Hidden initially) -->
+      <div id="solutionContainer" class="hidden space-y-6">
+
+        <!-- STEP 3: UNDERSTAND THE PROBLEM -->
+        <div class="bg-gfg-card border border-gfg-border rounded-2xl p-6 shadow-xl relative overflow-hidden">
+          <div class="flex items-center gap-2 border-b border-gfg-border pb-3 mb-4">
+            <span class="w-6 h-6 rounded-full bg-gfg text-black font-bold text-xs flex items-center justify-center">3</span>
+            <h3 class="font-bold text-white text-base">Understand the Problem</h3>
+          </div>
+
+          <!-- What Happened? -->
+          <div class="mb-5 bg-slate-900/60 rounded-xl p-4 border border-slate-800">
+            <h4 class="text-xs font-bold text-gfg uppercase tracking-wider mb-2 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              What Happened?
+            </h4>
+            <p id="whatHappenedText" class="text-sm text-slate-200 leading-relaxed font-sans">
+              <!-- Dynamically populated -->
+            </p>
+          </div>
+
+          <!-- Why Might It Happen? -->
+          <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800">
+            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              Why Might It Happen?
+            </h4>
+            <ul id="whyHappenedList" class="text-sm text-slate-300 space-y-2 pl-2 list-disc list-inside">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- STEP 4: PROVIDE A SUGGESTED SOLUTION -->
+        <div class="bg-gfg-card border border-gfg-border rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center justify-between border-b border-gfg-border pb-3 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-gfg text-black font-bold text-xs flex items-center justify-center">4</span>
+              <h3 class="font-bold text-white text-base">Suggested Solution &amp; Code Fix</h3>
+            </div>
+          </div>
+
+          <!-- Possible Cause Summary -->
+          <div class="mb-5 bg-slate-900/40 rounded-xl p-4 border border-slate-800">
+            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Primary Root Cause</h4>
+            <p id="possibleCauseText" class="text-xs font-mono text-rose-300">
+              <!-- Dynamically populated -->
+            </p>
+          </div>
+
+          <!-- Code Fix: Bad vs Good -->
+          <div class="space-y-4">
+            
+            <!-- Broken Code -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5 px-1">
+                <span class="text-xs font-mono font-semibold text-rose-400 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> Problematic Code
+                </span>
+              </div>
+              <pre class="bg-gfg-code border border-rose-900/40 rounded-xl p-4 text-xs font-mono text-rose-200 overflow-x-auto"><code id="badCodeBlock"></code></pre>
+            </div>
+
+            <!-- Fixed Code -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5 px-1">
+                <span class="text-xs font-mono font-semibold text-emerald-400 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Recommended Fix
+                </span>
+                <button id="copyFixBtn" class="text-[11px] text-gfg hover:underline font-mono">Copy Fixed Code</button>
+              </div>
+              <pre class="bg-gfg-code border border-emerald-900/40 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto"><code id="fixedCodeBlock"></code></pre>
+            </div>
+
+            <!-- Pro-tip / Explanation of Fix -->
+            <div id="explanationBox" class="bg-emerald-950/20 border border-emerald-800/40 rounded-xl p-4 text-xs text-slate-300 leading-relaxed">
+              <!-- Dynamically populated explanation -->
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="border-t border-gfg-border py-4 bg-slate-900/60 text-center text-xs text-slate-500">
+    DEVFIX Tool &bull; GeeksforGeeks &amp; Campus TIU Challenge Project
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Comprehensive Offline Presets to satisfy the instant demo offline mode requirement
+    const PRESET_SOLUTIONS = {
+      'js-typeerror': {
+        language: 'JavaScript',
+        label: 'JS TypeError',
+        rawError: "TypeError: Cannot read properties of undefined (reading 'name')",
+        whatHappened: "You are trying to access a property ('name') from an object variable that is currently `undefined` or `null`.",
+        whyHappened: [
+          "An API response or promise resolved with missing data.",
+          "An object state variable was initialized without default keys.",
+          "A object function parameter was passed incorrectly or omitted."
+        ],
+        possibleCause: "Direct property access on uninitialized or null object reference.",
+        badCode: `const user = undefined;\nconsole.log(user.name); // ❌ Throws TypeError`,
+        fixedCode: `const user = undefined;\n\n// Solution 1: Optional Chaining (?.)\nconsole.log(user?.name);\n\n// Solution 2: Defensive Guard Check\nif (user && user.name) {\n  console.log(user.name);\n} else {\n  console.log("Guest");\n}`,
+        explanation: "Optional chaining (`?.`) gracefully returns `undefined` instead of crashing your app when the target object is missing."
+      },
+      'python-attribute': {
+        language: 'Python',
+        label: 'Python AttributeError',
+        rawError: "AttributeError: 'NoneType' object has no attribute 'get'",
+        whatHappened: "You tried to call a method (`.get()`) on a variable that currently holds the value `None` instead of a dictionary or object.",
+        whyHappened: [
+          "A function returned `None` due to missing `return` statement or empty result.",
+          "Dictionary lookup failed or DB query returned no record.",
+          "Variable was initialized to `None` and not updated."
+        ],
+        possibleCause: "Invoking dict/class methods on a None object.",
+        badCode: `data = fetch_user_data()\n# If user not found, fetch_user_data returns None\nuser_id = data.get("id") # ❌ Throws AttributeError`,
+        fixedCode: `data = fetch_user_data()\n\n# Solution: Verify data is not None before invoking methods\nif data is not None:\n    user_id = data.get("id")
+else:\n    user_id = None`,
+        explanation: "Always check if function return values are `None` before attempting object method calls."
+      },
+      'java-nullpointer': {
+        language: 'Java',
+        label: 'Java NullPointerException',
+        rawError: "java.lang.NullPointerException: Cannot invoke \"String.length()\" because \"str\" is null",
+        whatHappened: "The Java runtime attempted to call `.length()` on an unallocated object reference (`str` is `null`).",
+        whyHappened: [
+          "The string reference was declared but never initialized.",
+          "Passed argument to method was null without validation.",
+          "Method return value was null."
+        ],
+        possibleCause: "Null dereference on unallocated reference type.",
+        badCode: `String str = null;\nint len = str.length(); // ❌ Throws NullPointerException`,
+        fixedCode: `String str = null;\n\n// Solution 1: Null check\nif (str != null) {\n    int len = str.length();\n}\n\n// Solution 2: Objects.requireNonNull or Optional\nOptional.ofNullable(str).ifPresent(s -> System.out.println(s.length()));`,
+        explanation: "Use Java 8+ `Optional` or defensive null checks (`str != null`) prior to invoking methods on objects."
+      },
+      'cpp-segfault': {
+        language: 'C++',
+        label: 'C++ SegFault',
+        rawError: "Segmentation fault (core dumped) - Signal 11: SIGSEGV",
+        whatHappened: "Your C++ program attempted to access an invalid memory location or read/write restricted memory.",
+        whyHappened: [
+          "Dereferenced a dangling, null, or uninitialized pointer.",
+          "Out-of-bounds array or vector index access.",
+          "Stack overflow caused by infinite recursion."
+        ],
+        possibleCause: "Invalid memory address access or null pointer dereference.",
+        badCode: `int* ptr = nullptr;\n*ptr = 42; // ❌ Segmentation fault`,
+        fixedCode: `int* ptr = nullptr;\nint val = 42;\n\n// Solution: Assign valid memory address before dereferencing\nptr = &val;\nif (ptr != nullptr) {\n    *ptr = 42;\n}`,
+        explanation: "Always initialize pointers, verify non-null state before dereferencing, or use C++ smart pointers like `std::unique_ptr`."
+      }
+    };
+
+    const languageSelect = document.getElementById('languageSelect');
+    const presetButtonsContainer = document.getElementById('presetButtonsContainer');
+    const errorMessageInput = document.getElementById('errorMessageInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const analyzeBtnText = document.getElementById('analyzeBtnText');
+    const clearBtn = document.getElementById('clearBtn');
+    const modeToggleBtn = document.getElementById('modeToggleBtn');
+    const engineModeText = document.getElementById('engineModeText');
+    
+    const apiKeySection = document.getElementById('apiKeySection');
+    const toggleApiKeyBtn = document.getElementById('toggleApiKeyBtn');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+
+    const emptyState = document.getElementById('emptyState');
+    const solutionContainer = document.getElementById('solutionContainer');
+    const statusBadge = document.getElementById('statusBadge');
+    
+    const whatHappenedText = document.getElementById('whatHappenedText');
+    const whyHappenedList = document.getElementById('whyHappenedList');
+    const possibleCauseText = document.getElementById('possibleCauseText');
+    const badCodeBlock = document.getElementById('badCodeBlock');
+    const fixedCodeBlock = document.getElementById('fixedCodeBlock');
+    const explanationBox = document.getElementById('explanationBox');
+
+    const copyFixBtn = document.getElementById('copyFixBtn');
+    const copyAllFixBtn = document.getElementById('copyAllFixBtn');
+
+    function renderPresetButtons() {
+      presetButtonsContainer.innerHTML = '';
+      Object.keys(PRESET_SOLUTIONS).forEach(key => {
+        const item = PRESET_SOLUTIONS[key];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'text-left text-xs bg-gfg-dark hover:bg-slate-800 border border-gfg-border hover:border-gfg p-2 rounded-lg transition font-mono text-slate-300 truncate';
+        btn.innerHTML = `<span class="text-gfg font-bold">#</span> ${item.label}`;
+        btn.addEventListener('click', () => loadPreset(key));
+        presetButtonsContainer.appendChild(btn);
+      });
+    }
+
+    function loadPreset(key) {
+      const item = PRESET_SOLUTIONS[key];
+      if (!item) return;
+      languageSelect.value = item.language;
+      errorMessageInput.value = item.rawError;
+      displaySolution(item);
+    }
+
+    function displaySolution(data) {
+      emptyState.classList.add('hidden');
+      solutionContainer.classList.remove('hidden');
+      copyAllFixBtn.classList.remove('hidden');
+      copyAllFixBtn.classList.add('flex');
+
+      statusBadge.textContent = 'Analysis Ready';
+      statusBadge.className = 'bg-emerald-950 text-gfg text-xs px-2.5 py-0.5 rounded-full font-mono border border-emerald-800';
+
+      whatHappenedText.textContent = data.whatHappened;
+      
+      whyHappenedList.innerHTML = '';
+      data.whyHappened.forEach(reason => {
+        const li = document.createElement('li');
+        li.textContent = reason;
+        whyHappenedList.appendChild(li);
+      });
+
+      possibleCauseText.textContent = data.possibleCause;
+      badCodeBlock.textContent = data.badCode;
+      fixedCodeBlock.textContent = data.fixedCode;
+      explanationBox.innerHTML = `<span class="font-bold text-gfg">Fix Summary:</span> ${data.explanation}`;
+
+      solutionContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Copy to clipboard helper
+    function copyToClipboard(text, btnElement) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      const origText = btnElement.textContent;
+      btnElement.textContent = 'Copied! ✓';
+      setTimeout(() => {
+        btnElement.textContent = origText;
+      }, 2000);
+    }
+
+    copyFixBtn.addEventListener('click', () => {
+      copyToClipboard(fixedCodeBlock.textContent, copyFixBtn);
+    });
+
+    copyAllFixBtn.addEventListener('click', () => {
+      const fullReport = `DEVFIX SOLUTION REPORT\n--------------------\nError: ${errorMessageInput.value}\n\nWHAT HAPPENED:\n${whatHappenedText.textContent}\n\nPOSSIBLE CAUSE:\n${possibleCauseText.textContent}\n\nSUGGESTED FIX:\n${fixedCodeBlock.textContent}`;
+      copyToClipboard(fullReport, copyAllFixBtn);
+    });
+
+    async function analyzeError() {
+      const lang = languageSelect.value;
+      const rawText = errorMessageInput.value.trim();
+      const apiKey = apiKeyInput.value.trim();
+
+      if (!rawText) {
+        alert('Please enter an error message or select a sample preset.');
+        return;
+      }
+
+      // UI Loading state
+      analyzeBtn.disabled = true;
+      analyzeBtnText.textContent = 'Analyzing error...';
+      statusBadge.textContent = 'Processing...';
+
+      // 1. IF GEMINI API KEY IS PROVIDED: Use Gemini 3 Flash Preview live engine
+      if (apiKey) {
+        try {
+          const systemInstruction = "You are DEVFIX, a world-class code debugger. Given an error log, respond with a JSON object detailing the breakdown. Return ONLY valid JSON matching the exact specified schema.";
+          const userQuery = `Analyze this ${lang} error stack trace:\n${rawText}`;
+          
+          const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            generationConfig: {
+              responseMimeType: "application/json",
+              responseSchema: {
+                type: "OBJECT",
+                properties: {
+                  whatHappened: { type: "STRING" },
+                  whyHappened: { type: "ARRAY", items: { type: "STRING" } },
+                  possibleCause: { type: "STRING" },
+                  badCode: { type: "STRING" },
+                  fixedCode: { type: "STRING" },
+                  explanation: { type: "STRING" }
+                },
+                required: ["whatHappened", "whyHappened", "possibleCause", "badCode", "fixedCode", "explanation"]
+              }
+            }
+          };
+
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const result = await response.json();
+          if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+            const parsed = JSON.parse(result.candidates[0].content.parts[0].text);
+            displaySolution(parsed);
+          } else {
+            throw new Error("Invalid API response format");
+          }
+        } catch (err) {
+          console.warn("API Error, falling back to heuristic engine:", err);
+          fallbackHeuristicMatch(lang, rawText);
+        } finally {
+          analyzeBtn.disabled = false;
+          analyzeBtnText.textContent = 'Analyze & Generate Fix';
+        }
+        return;
+      }
+
+      // 2. OFFLINE / HEURISTIC MODE
+      setTimeout(() => {
+        fallbackHeuristicMatch(lang, rawText);
+        analyzeBtn.disabled = false;
+        analyzeBtnText.textContent = 'Analyze & Generate Fix';
+      }, 400);
+    }
+
+    function fallbackHeuristicMatch(lang, text) {
+      const lower = text.toLowerCase();
+      
+      // Match presets
+      if (lower.includes('typeerror') || lower.includes('undefined')) {
+        displaySolution(PRESET_SOLUTIONS['js-typeerror']);
+      } else if (lower.includes('attributeerror') || lower.includes('nonetype')) {
+        displaySolution(PRESET_SOLUTIONS['python-attribute']);
+      } else if (lower.includes('nullpointer') || lower.includes('null')) {
+        displaySolution(PRESET_SOLUTIONS['java-nullpointer']);
+      } else if (lower.includes('segmentation') || lower.includes('sigsegv')) {
+        displaySolution(PRESET_SOLUTIONS['cpp-segfault']);
+      } else {
+        // Generic dynamically generated fallback solution for unknown errors
+        displaySolution({
+          language: lang,
+          whatHappened: `An unexpected issue occurred while executing your ${lang} code.`,
+          whyHappened: [
+            "A runtime variable was accessed out of bounds or before instantiation.",
+            "Type mismatch between expected and actual parameter values.",
+            "Unhandled edge case or missing conditional check."
+          ],
+          possibleCause: "Runtime exception or invalid reference operation.",
+          badCode: `// Example problematic pattern in ${lang}\nfunction executeTask(data) {\n  return data.value; // May fail if data is null/undefined\n}`,
+          fixedCode: `// Robust pattern in ${lang}\nfunction executeTask(data) {\n  if (!data) return null;\n  return data.value;\n}`,
+          explanation: "Ensure input parameters and object states are validated before invoking nested attributes or methods."
+        });
+      }
+    }
+
+    toggleApiKeyBtn.addEventListener('click', () => {
+      apiKeySection.classList.toggle('hidden');
+    });
+
+    clearBtn.addEventListener('click', () => {
+      errorMessageInput.value = '';
+      emptyState.classList.remove('hidden');
+      solutionContainer.classList.add('hidden');
+      copyAllFixBtn.classList.add('hidden');
+      statusBadge.textContent = 'Awaiting Input';
+      statusBadge.className = 'bg-slate-800 text-slate-400 text-xs px-2.5 py-0.5 rounded-full font-mono border border-gfg-border';
+    });
+
+    document.getElementById('loadQuickSampleBtn').addEventListener('click', () => {
+      loadPreset('js-typeerror');
+    });
+
+    analyzeBtn.addEventListener('click', analyzeError);
+
+    // Initial setup on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPresetButtons();
+      // Load standard default JavaScript sample for instant preview
+      loadPreset('js-typeerror');
+    });
+  </script>
+</body>
+</html>
